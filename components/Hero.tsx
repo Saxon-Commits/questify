@@ -52,7 +52,7 @@ export const Hero: React.FC = () => {
       <div className="max-w-md mx-auto">
         {status === 'success' ? (
           <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400 font-mono text-sm animate-fade-in">
-            &gt; Access code requested. Check your comms channel.
+            &gt; Access request logged. Stand by for mission updates.
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-3">
