@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
 
 export const Hero: React.FC = () => {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
   const joinWaitlist = useMutation(api.waitlist.join);
+  const waitlistCount = useQuery(api.waitlist.getCount) ?? 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,7 +82,11 @@ export const Hero: React.FC = () => {
       </div>
 
       <p className="text-xs text-slate-500 mt-6 font-mono">
-        Join <span className="text-slate-300">150+</span> other Founders waiting for the drop.
+        {waitlistCount === 0 ? (
+          <>Be the <span className="text-slate-300">#1 Founder</span> waiting for the drop.</>
+        ) : (
+          <>Join <span className="text-slate-300">{waitlistCount.toLocaleString()}</span> other Founders waiting for the drop.</>
+        )}
       </p>
     </section>
   );

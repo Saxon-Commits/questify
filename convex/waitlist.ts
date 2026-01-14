@@ -1,5 +1,13 @@
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+
+export const getCount = query({
+    args: {},
+    handler: async (ctx) => {
+        const count = await ctx.db.query("waitlist").collect();
+        return count.length;
+    },
+});
 
 export const join = mutation({
     args: { email: v.string() },
