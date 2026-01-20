@@ -1,5 +1,6 @@
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 
 export const getCount = query({
     args: {},
@@ -19,10 +20,22 @@ export const join = mutation({
             .first();
 
         if (existing) {
+            // Still try to sync to Notion if not already there
+            await ctx.scheduler.runAfter(0, internal.notion.saveToWaitlist, {
+                email: args.email,
+                platform: "Web"
+            });
             return existing._id;
         }
 
         const newId = await ctx.db.insert("waitlist", { email: args.email });
+
+        // Schedule the Notion sync action
+        await ctx.scheduler.runAfter(0, internal.notion.saveToWaitlist, {
+            email: args.email,
+            platform: "Web"
+        });
+
         return newId;
     },
 });
